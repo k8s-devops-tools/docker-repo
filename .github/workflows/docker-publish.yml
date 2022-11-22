@@ -5,8 +5,8 @@ name: Build Docker images
 env:
   REGISTRY_USERNAME: ${{ github.actor }}
   REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  REGISTRY_URL: ghcr.io/organization-here
-  GITHUB_ORGANIZATION: organization-here
+  REGISTRY_URL: ghcr.io/k8s-devops-tools
+  GITHUB_ORGANIZATION: k8s-devops-tools
   KEYLESS: true
 
 jobs:
