@@ -20,6 +20,6 @@ jobs:
       uses: philips-software/docker-ci-scripts@v4.5.0
       with:
         dockerfile: .
-        image-name: image-name-here
+        image-name: base
         tags: latest 0.1
         push-branches: main develop
