@@ -14,6 +14,7 @@ jobs:
     name: Test latest image
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - name: Build Docker Images
       id: docker
       uses: philips-software/docker-ci-scripts@v4.5.0
