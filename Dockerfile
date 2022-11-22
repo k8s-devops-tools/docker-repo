@@ -2,9 +2,9 @@ FROM codercom/enterprise-base:ubuntu
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ENV EDITOR=vim
+USER root
 
-RUN apt-get update && apt-get upgrade --yes
+ENV EDITOR=vim
 
 RUN apt-get install --yes \
         ca-certificates \
@@ -82,3 +82,4 @@ RUN echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/
 	&& apt update \
 	&& apt install nfpm
 
+USER coder
