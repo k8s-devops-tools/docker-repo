@@ -13,7 +13,6 @@ jobs:
   test_latest_image:
     name: Test latest image
     runs-on: ubuntu-latest
-    container: philipssoftware/node:latest
     steps:
     - name: Build Docker Images
       id: docker
