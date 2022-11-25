@@ -21,5 +21,5 @@ jobs:
       with:
         dockerfile: .
         image-name: base
-        tags: latest 0.1
+        tags: latest 0.2
         push-branches: main develop
