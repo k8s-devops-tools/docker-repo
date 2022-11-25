@@ -15,11 +15,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: SplitTag
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        refIN=${GITHUB_REF##*/}
+        arrIN=(${refIN//./ })
+        echo "major=${arrIN[0]}" >> $GITHUB_ENV
+        echo "minor=${arrIN[0]}.${arrIN[1]}" >> $GITHUB_ENV
+        echo "patch=${arrIN[0]}.${arrIN[1]}.${arrIN[2]}" >> $GITHUB_ENV
+
+    - name: Set no tag
+      if: startsWith(github.ref, 'refs/tags/v') == false
+      run: |
+        echo "major=" >> $GITHUB_ENV
+        echo "minor=" >> $GITHUB_ENV
+        echo "patch=" >> $GITHUB_ENV
     - name: Build Docker Images
       id: docker
       uses: philips-software/docker-ci-scripts@v4.5.0
       with:
         dockerfile: .
         image-name: base
-        tags: latest 0.2
+        tags: "latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}"
+        push-on-git-tag: "true"
         push-branches: main develop
