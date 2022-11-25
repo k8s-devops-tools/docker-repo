@@ -49,7 +49,7 @@ jobs:
           echo "patch=" >> $GITHUB_ENV
         
       - name: Build ${{ matrix.job }} image
-        uses: philips-software/docker-ci-scripts@v4.5.0
+        uses: philips-software/docker-ci-scripts@v5.0.0
         with:
           dockerfile: ${{ matrix.job }}/Dockerfile
           image-name: ${{ matrix.job }}
