@@ -70,9 +70,15 @@ RUN bash -c ". $HOME/.bashrc \
 	&& go install -v mvdan.cc/sh/v3/cmd/shfmt@latest \
 	"
 
-# install nodejs
-RUN bash -c "$(curl -fsSL https://deb.nodesource.com/setup_14.x)" \
-	&& apt-get install -y nodejs
+# Install whichever Node version is LTS
+RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
+RUN DEBIAN_FRONTEND="noninteractive" apt-get update -y && \
+    apt-get install -y nodejs
+
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN DEBIAN_FRONTEND="noninteractive" apt-get update && apt-get install -y yarn
 
 # install zstd
 RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/horta/zstd.install/main/install)"
