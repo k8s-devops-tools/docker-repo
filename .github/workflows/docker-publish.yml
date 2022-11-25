@@ -10,32 +10,49 @@ env:
   KEYLESS: true
 
 jobs:
-  test_latest_image:
-    name: Test latest image
-    runs-on: ubuntu-latest
+  images:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        job:
+          - base
+          - test
+      fail-fast: false
+    name: images/${{ matrix.job}}
     steps:
-    - uses: actions/checkout@v3
-    - name: SplitTag
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: |
-        refIN=${GITHUB_REF##*/}
-        arrIN=(${refIN//./ })
-        echo "major=${arrIN[0]}" >> $GITHUB_ENV
-        echo "minor=${arrIN[0]}.${arrIN[1]}" >> $GITHUB_ENV
-        echo "patch=${arrIN[0]}.${arrIN[1]}.${arrIN[2]}" >> $GITHUB_ENV
+      - name: Cancel previous runs
+        if: github.event_name == 'pull_request'
+        uses: styfle/cancel-workflow-action@0.11.0
 
-    - name: Set no tag
-      if: startsWith(github.ref, 'refs/tags/v') == false
-      run: |
-        echo "major=" >> $GITHUB_ENV
-        echo "minor=" >> $GITHUB_ENV
-        echo "patch=" >> $GITHUB_ENV
-    - name: Build Docker Images
-      id: docker
-      uses: philips-software/docker-ci-scripts@v4.5.0
-      with:
-        dockerfile: .
-        image-name: base
-        tags: "latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}"
-        push-on-git-tag: "true"
-        push-branches: main develop
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # - name: Build ${{ matrix.job }} images
+      #   run: |
+      #     ${{ github.workspace }}/scripts/build_images.sh \
+      #       --tag=${{ matrix.job }}
+
+      - name: SplitTag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          refIN=${GITHUB_REF##*/}
+          arrIN=(${refIN//./ })
+          echo "major=${arrIN[0]}" >> $GITHUB_ENV
+          echo "minor=${arrIN[0]}.${arrIN[1]}" >> $GITHUB_ENV
+          echo "patch=${arrIN[0]}.${arrIN[1]}.${arrIN[2]}" >> $GITHUB_ENV
+
+      - name: Set no tag
+        if: startsWith(github.ref, 'refs/tags/v') == false
+        run: |
+          echo "major=" >> $GITHUB_ENV
+          echo "minor=" >> $GITHUB_ENV
+          echo "patch=" >> $GITHUB_ENV
+        
+      - name: Build ${{ matrix.job }} image
+        uses: philips-software/docker-ci-scripts@v4.5.0
+        with:
+          dockerfile: .
+          image-name: ${{ matrix.job }}
+          tags: "latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}"
+          push-on-git-tag: "true"
+          push-branches: main develop
