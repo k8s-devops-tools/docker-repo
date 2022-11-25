@@ -34,7 +34,7 @@ RUN apt-get install locales && locale-gen en_US.UTF-8
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # configure direnv
-RUN direnv hook bash >> $HOME/.bashrc
+RUN direnv hook bash >> /home/coder/.bashrc
 
 # install nix
 RUN sh <(curl -L https://nixos.org/nix/install) --daemon
@@ -59,13 +59,16 @@ RUN mkdir -p /etc/apt/keyrings \
 
 # install golang and language tooling
 ENV GO_VERSION=1.19
-ENV GOPATH=$HOME/go-packages
+
+
+
+ENV GOPATH=/home/coder/go
 ENV GOROOT=$HOME/go
 ENV PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 RUN curl -fsSL https://dl.google.com/go/go$GO_VERSION.linux-amd64.tar.gz | tar xzs
 RUN echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bashrc
 
-RUN bash -c ". $HOME/.bashrc \
+RUN bash -c ". /home/coder/.bashrc \
 	go install -v golang.org/x/tools/gopls@latest \
 	&& go install -v mvdan.cc/sh/v3/cmd/shfmt@latest \
 	"
