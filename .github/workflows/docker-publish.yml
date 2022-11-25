@@ -51,7 +51,7 @@ jobs:
       - name: Build ${{ matrix.job }} image
         uses: philips-software/docker-ci-scripts@v4.5.0
         with:
-          dockerfile: .
+          dockerfile: ${{ matrix.job }}/Dockerfile
           image-name: ${{ matrix.job }}
           tags: "latest ${{ env.major }} ${{ env.minor }} ${{ env.patch }}"
           push-on-git-tag: "true"
