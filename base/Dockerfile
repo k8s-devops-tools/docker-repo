@@ -27,6 +27,7 @@ RUN apt-get install --yes \
         sudo \
         unzip \
         xz-utils \
+	libsecret-1-0 \
         zip
 
 # configure locales to UTF8
@@ -36,13 +37,13 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 # configure direnv
 RUN direnv hook bash >> /home/coder/.bashrc
 
-# install nix
-RUN sh <(curl -L https://nixos.org/nix/install) --daemon
+# # install nix
+# RUN sh <(curl -L https://nixos.org/nix/install) --daemon
 
-RUN mkdir -p $HOME/.config/nix $HOME/.config/nixpkgs \
-        && echo 'sandbox = false' >> $HOME/.config/nix/nix.conf \
-        && echo '{ allowUnfree = true; }' >> $HOME/.config/nixpkgs/config.nix \
-        && echo '. $HOME/.nix-profile/etc/profile.d/nix.sh' >> $HOME/.bashrc
+# RUN mkdir -p $HOME/.config/nix $HOME/.config/nixpkgs \
+#         && echo 'sandbox = false' >> $HOME/.config/nix/nix.conf \
+#         && echo '{ allowUnfree = true; }' >> $HOME/.config/nixpkgs/config.nix \
+#         && echo '. $HOME/.nix-profile/etc/profile.d/nix.sh' >> $HOME/.bashrc
 
 
 # install docker and configure daemon to use vfs as GitHub codespaces requires vfs
